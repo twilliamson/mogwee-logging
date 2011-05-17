@@ -8,7 +8,7 @@
     <packaging>jar</packaging>
 
     <name>mogwee-logging</name>
-    <url>https://twilliamson@github.com/twilliamson/mogwee-logging.git</url>
+    <url>https://github.com/twilliamson/mogwee-logging</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
