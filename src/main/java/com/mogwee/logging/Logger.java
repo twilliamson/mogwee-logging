@@ -24,6 +24,19 @@ public class Logger
 
     private final org.apache.log4j.Logger log4j;
 
+    /**
+     * Returns a logger for the calling class.
+     * <p/>
+     * Specifically, throws and catches an exception, then uses the stack trace to determine the calling class.
+     * The fully-qualified name of that class is used to get a Log4J logger, when is then wrapped.
+     * Typical usage is to use this method to initialize a static member variable, e.g.,
+     * {@code private static final Logger LOG = Logger.getLogger();}
+     * <p/>
+     * As this is not the sort of thing you want (or need) to be doing hundreds of times a second,
+     * a warning is logged if this method is not called from a static constructor.
+     *
+     * @return a logger
+     */
     public static Logger getLogger()
     {
         StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
@@ -49,21 +62,33 @@ public class Logger
         this.log4j = log4j;
     }
 
+    /**
+     * Logs a formatted message and stack trace if DEBUG logging is enabled.
+     *
+     * @param cause   an exception to print stack trace of
+     * @param message a <a href="http://download.oracle.com/javase/6/docs/api/java/util/Formatter.html#syntax">format string</a>
+     * @param args    arguments referenced by the format specifiers in the format string
+     */
     public final void debugf(Throwable cause, String message, Object... args)
     {
         logf(Level.DEBUG, cause, message, args);
     }
 
+    /**
+     * Logs a formatted message if DEBUG logging is enabled.
+     *
+     * @param message a <a href="http://download.oracle.com/javase/6/docs/api/java/util/Formatter.html#syntax">format string</a>
+     * @param args    arguments referenced by the format specifiers in the format string
+     */
     public final void debugf(String message, Object... args)
     {
         logf(Level.DEBUG, null, message, args);
     }
 
     /**
-     * You meant to call {@link #debug(Throwable, String)}.
-     *
-     * @param cause   exception to print stack trace of
-     * @param message message to log
+     * @param cause   an exception to print stack trace of
+     * @param message a message to log
+     * @deprecated You meant to call {@link #debug(Throwable, String)}.
      */
     @Deprecated
     public final void debugf(Throwable cause, String message)
@@ -72,9 +97,8 @@ public class Logger
     }
 
     /**
-     * You meant to call {@link #debug(String)}.
-     *
-     * @param message message to log
+     * @param message a message to log
+     * @deprecated You meant to call {@link #debug(String)}.
      */
     @Deprecated
     public final void debugf(String message)
@@ -82,41 +106,75 @@ public class Logger
         log4j.debug(message);
     }
 
+    /**
+     * Logs a message and stack trace if DEBUG logging is enabled.
+     *
+     * @param cause   an exception to print stack trace of
+     * @param message a message
+     */
     public final void debug(Throwable cause, String message)
     {
         log4j.debug(message, cause);
     }
 
+    /**
+     * Logs a message if DEBUG logging is enabled.
+     *
+     * @param message a message
+     */
     public final void debug(String message)
     {
         log4j.debug(message);
     }
 
+    /**
+     * Logs a formatted message and stack trace if INFO logging is enabled.
+     *
+     * @param cause   an exception to print stack trace of
+     * @param message a <a href="http://download.oracle.com/javase/6/docs/api/java/util/Formatter.html#syntax">format string</a>
+     * @param args    arguments referenced by the format specifiers in the format string.
+     */
     public final void infof(Throwable cause, String message, Object... args)
     {
         logf(Level.INFO, cause, message, args);
     }
 
+    /**
+     * Logs a formatted message if INFO logging is enabled.
+     *
+     * @param message a <a href="http://download.oracle.com/javase/6/docs/api/java/util/Formatter.html#syntax">format string</a>
+     * @param args    arguments referenced by the format specifiers in the format string.
+     */
     public final void infof(String message, Object... args)
     {
         logf(Level.INFO, null, message, args);
     }
 
+    /**
+     * Logs a message and stack trace if INFO logging is enabled.
+     *
+     * @param cause   an exception to print stack trace of
+     * @param message a message
+     */
     public final void info(Throwable cause, String message)
     {
         log4j.info(message, cause);
     }
 
+    /**
+     * Logs a message if INFO logging is enabled.
+     *
+     * @param message a message
+     */
     public final void info(String message)
     {
         log4j.info(message);
     }
 
     /**
-     * You meant to call {@link #info(Throwable, String)}.
-     *
-     * @param cause   exception to print stack trace of
-     * @param message message to log
+     * @param cause   an exception to print stack trace of
+     * @param message a message to log
+     * @deprecated You meant to call {@link #info(Throwable, String)}.
      */
     @Deprecated
     public final void infof(Throwable cause, String message)
@@ -125,9 +183,8 @@ public class Logger
     }
 
     /**
-     * You meant to call {@link #info(String)}.
-     *
-     * @param message message to log
+     * @param message a message to log
+     * @deprecated You meant to call {@link #info(String)}.
      */
     @Deprecated
     public final void infof(String message)
@@ -135,31 +192,54 @@ public class Logger
         log4j.info(message);
     }
 
+    /**
+     * Logs a formatted message and stack trace if WARN logging is enabled.
+     *
+     * @param cause   an exception to print stack trace of
+     * @param message a <a href="http://download.oracle.com/javase/6/docs/api/java/util/Formatter.html#syntax">format string</a>
+     * @param args    arguments referenced by the format specifiers in the format string.
+     */
     public final void warnf(Throwable cause, String message, Object... args)
     {
         logf(Level.WARN, cause, message, args);
     }
 
+    /**
+     * Logs a formatted message if WARN logging is enabled.
+     *
+     * @param message a <a href="http://download.oracle.com/javase/6/docs/api/java/util/Formatter.html#syntax">format string</a>
+     * @param args    arguments referenced by the format specifiers in the format string.
+     */
     public final void warnf(String message, Object... args)
     {
         logf(Level.WARN, null, message, args);
     }
 
+    /**
+     * Logs a message and stack trace if WARN logging is enabled.
+     *
+     * @param cause   an exception to print stack trace of
+     * @param message a message
+     */
     public final void warn(Throwable cause, String message)
     {
         log4j.warn(message, cause);
     }
 
+    /**
+     * Logs a message if WARN logging is enabled.
+     *
+     * @param message a message
+     */
     public final void warn(String message)
     {
         log4j.warn(message);
     }
 
     /**
-     * You meant to call {@link #warn(Throwable, String)}.
-     *
-     * @param cause   exception to print stack trace of
-     * @param message message to log
+     * @param cause   an exception to print stack trace of
+     * @param message a message to log
+     * @deprecated You meant to call {@link #warn(Throwable, String)}.
      */
     @Deprecated
     public final void warnf(Throwable cause, String message)
@@ -168,9 +248,8 @@ public class Logger
     }
 
     /**
-     * You meant to call {@link #warn(String)}.
-     *
-     * @param message message to log
+     * @param message a message to log
+     * @deprecated You meant to call {@link #warn(String)}.
      */
     @Deprecated
     public final void warnf(String message)
@@ -178,31 +257,54 @@ public class Logger
         log4j.warn(message);
     }
 
+    /**
+     * Logs a formatted message and stack trace if ERROR logging is enabled.
+     *
+     * @param cause   an exception to print stack trace of
+     * @param message a <a href="http://download.oracle.com/javase/6/docs/api/java/util/Formatter.html#syntax">format string</a>
+     * @param args    arguments referenced by the format specifiers in the format string.
+     */
     public final void errorf(Throwable cause, String message, Object... args)
     {
         logf(Level.ERROR, cause, message, args);
     }
 
+    /**
+     * Logs a formatted message if ERROR logging is enabled.
+     *
+     * @param message a <a href="http://download.oracle.com/javase/6/docs/api/java/util/Formatter.html#syntax">format string</a>
+     * @param args    arguments referenced by the format specifiers in the format string.
+     */
     public final void errorf(String message, Object... args)
     {
         logf(Level.ERROR, null, message, args);
     }
 
+    /**
+     * Logs a message and stack trace if ERROR logging is enabled.
+     *
+     * @param cause   an exception to print stack trace of
+     * @param message a message
+     */
     public final void error(Throwable cause, String message)
     {
         log4j.error(message, cause);
     }
 
+    /**
+     * Logs a message if ERROR logging is enabled.
+     *
+     * @param message a message
+     */
     public final void error(String message)
     {
         log4j.error(message);
     }
 
     /**
-     * You meant to call {@link #error(Throwable, String)}.
-     *
-     * @param cause   exception to print stack trace of
-     * @param message message to log
+     * @param cause   an exception to print stack trace of
+     * @param message a message to log
+     * @deprecated You meant to call {@link #error(Throwable, String)}.
      */
     @Deprecated
     public final void errorf(Throwable cause, String message)
@@ -211,9 +313,8 @@ public class Logger
     }
 
     /**
-     * You meant to call {@link #error(String)}.
-     *
-     * @param message message to log
+     * @param message a message to log
+     * @deprecated You meant to call {@link #error(String)}.
      */
     @Deprecated
     public final void errorf(String message)
@@ -221,21 +322,35 @@ public class Logger
         log4j.error(message);
     }
 
+    /**
+     * Logs a formatted message and stack trace if DEBUG logging is enabled
+     * or a formatted message and exception description if INFO logging is enabled.
+     *
+     * @param cause   an exception to print stack trace of if DEBUG logging is enabled
+     * @param message a <a href="http://download.oracle.com/javase/6/docs/api/java/util/Formatter.html#syntax">format string</a>
+     * @param args    arguments referenced by the format specifiers in the format string.
+     */
     public final void infoDebugf(final Throwable cause, final String message, final Object... args)
     {
         logDebugf(Level.INFO, cause, message, args);
     }
 
+    /**
+     * Logs a message and stack trace if DEBUG logging is enabled
+     * or a formatted message and exception description if INFO logging is enabled.
+     *
+     * @param cause   an exception to print stack trace of if DEBUG logging is enabled
+     * @param message a message
+     */
     public final void infoDebug(final Throwable cause, final String message)
     {
         logDebug(Level.INFO, cause, message);
     }
 
     /**
-     * You meant to call {@link #infoDebug(Throwable, String)}.
-     *
-     * @param cause   exception to print stack trace of if DEBUG level is enabled
-     * @param message message to log
+     * @param cause   an exception to print stack trace of if DEBUG level is enabled
+     * @param message a message to log
+     * @deprecated You meant to call {@link #infoDebug(Throwable, String)}.
      */
     @Deprecated
     public final void infoDebugf(Throwable cause, String message)
@@ -243,21 +358,35 @@ public class Logger
         infoDebug(cause, message);
     }
 
+    /**
+     * Logs a formatted message and stack trace if DEBUG logging is enabled
+     * or a formatted message and exception description if WARN logging is enabled.
+     *
+     * @param cause   an exception to print stack trace of if DEBUG logging is enabled
+     * @param message a <a href="http://download.oracle.com/javase/6/docs/api/java/util/Formatter.html#syntax">format string</a>
+     * @param args    arguments referenced by the format specifiers in the format string.
+     */
     public final void warnDebugf(final Throwable cause, final String message, final Object... args)
     {
         logDebugf(Level.WARN, cause, message, args);
     }
 
+    /**
+     * Logs a message and stack trace if DEBUG logging is enabled
+     * or a formatted message and exception description if WARN logging is enabled.
+     *
+     * @param cause   an exception to print stack trace of if DEBUG logging is enabled
+     * @param message a message
+     */
     public final void warnDebug(final Throwable cause, final String message)
     {
         logDebug(Level.WARN, cause, message);
     }
 
     /**
-     * You meant to call {@link #warnDebug(Throwable, String)}.
-     *
-     * @param cause   exception to print stack trace of if DEBUG level is enabled
-     * @param message message to log
+     * @param cause   an exception to print stack trace of if DEBUG level is enabled
+     * @param message a message to log
+     * @deprecated You meant to call {@link #warnDebug(Throwable, String)}.
      */
     @Deprecated
     public final void warnDebugf(Throwable cause, String message)
@@ -265,31 +394,40 @@ public class Logger
         warnDebug(cause, message);
     }
 
+    /**
+     * Logs a formatted message and stack trace if DEBUG logging is enabled
+     * or a formatted message and exception description if ERROR logging is enabled.
+     *
+     * @param cause   an exception to print stack trace of if DEBUG logging is enabled
+     * @param message a <a href="http://download.oracle.com/javase/6/docs/api/java/util/Formatter.html#syntax">format string</a>
+     * @param args    arguments referenced by the format specifiers in the format string.
+     */
     public final void errorDebugf(final Throwable cause, final String message, final Object... args)
     {
         logDebugf(Level.ERROR, cause, message, args);
     }
 
+    /**
+     * Logs a message and stack trace if DEBUG logging is enabled
+     * or a formatted message and exception description if ERROR logging is enabled.
+     *
+     * @param cause   an exception to print stack trace of if DEBUG logging is enabled
+     * @param message a message
+     */
     public final void errorDebug(final Throwable cause, final String message)
     {
         logDebug(Level.ERROR, cause, message);
     }
 
     /**
-     * You meant to call {@link #errorDebug(Throwable, String)}.
-     *
-     * @param cause   exception to print stack trace of if DEBUG level is enabled
-     * @param message message to log
+     * @param cause   an exception to print stack trace of if DEBUG level is enabled
+     * @param message a message to log
+     * @deprecated You meant to call {@link #errorDebug(Throwable, String)}.
      */
     @Deprecated
     public final void errorDebugf(Throwable cause, String message)
     {
         errorDebug(cause, message);
-    }
-
-    public boolean isEnabledFor(Level level)
-    {
-        return log4j.isEnabledFor(level);
     }
 
     private void logf(final Level level, final Throwable cause, final String message, final Object... args)

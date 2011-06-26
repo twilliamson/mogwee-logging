@@ -425,7 +425,6 @@ public class TestLogger
 
         for (Level currentLevel : Arrays.asList(Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR)) {
             CapturingAppender.setLogLevel(currentLevel);
-            Assert.assertTrue(LOG.isEnabledFor(currentLevel));
 
             log(level, "Hello %s");
             assertEvent(expectLog, level, "Hello %s");
@@ -514,7 +513,6 @@ public class TestLogger
 
         for (Level currentLevel : Arrays.asList(Level.INFO, Level.WARN, Level.ERROR)) {
             CapturingAppender.setLogLevel(currentLevel);
-            Assert.assertTrue(LOG.isEnabledFor(currentLevel));
             logDebug(level, null, "Hello %s");
             assertEvent(expectLog, level, "Hello %s");
 
@@ -559,7 +557,6 @@ public class TestLogger
 
         for (Level currentLevel : Arrays.asList(Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR)) {
             CapturingAppender.setLogLevel(currentLevel);
-            Assert.assertTrue(LOG.isEnabledFor(currentLevel));
             logf(level, "Hello %s", 1234);
             assertEvent(expectLog, level, "Hello 1234");
 
@@ -680,7 +677,6 @@ public class TestLogger
 
         for (Level currentLevel : Arrays.asList(Level.INFO, Level.WARN, Level.ERROR)) {
             CapturingAppender.setLogLevel(currentLevel);
-            Assert.assertTrue(LOG.isEnabledFor(currentLevel));
             logDebugf(level, null, "Hello %s", 1234);
             assertEvent(expectLog, level, "Hello 1234");
 
