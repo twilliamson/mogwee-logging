@@ -27,26 +27,21 @@ public class Logger
     public static Logger getLogger()
     {
         StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
+        // stacktrace[0] is getStackTrace()
+        // stacktrace[1] is getLogger()
+        StackTraceElement element = stacktrace[2];
+        String name = element.getClassName();
 
-        for (int i = 2; i < stacktrace.length; ++i) {
-            StackTraceElement element = stacktrace[i];
-            String name = element.getClassName();
-
-            if (!name.equals(Logger.class.getName())) {
-                if (!"<clinit>".equals(element.getMethodName())) {
-                    LOG.warnf(
-                        "Logger %s wasn't allocated in static constructor -- did you forget to make the field static? (%s:%s)",
-                        name,
-                        element.getFileName(),
-                        element.getLineNumber()
-                    );
-                }
-
-                return new Logger(org.apache.log4j.Logger.getLogger(name));
-            }
+        if (!"<clinit>".equals(element.getMethodName())) {
+            LOG.warnf(
+                "Logger %s wasn't allocated in static constructor -- did you forget to make the field static? (%s:%s)",
+                name,
+                element.getFileName(),
+                element.getLineNumber()
+            );
         }
 
-        throw new IllegalStateException();
+        return new Logger(org.apache.log4j.Logger.getLogger(name));
     }
 
     private Logger(org.apache.log4j.Logger log4j)
@@ -300,7 +295,22 @@ public class Logger
     private void logf(final Level level, final Throwable cause, final String message, final Object... args)
     {
         if (log4j.isEnabledFor(level)) {
-            log4j.log(level, String.format(message, args), cause);
+            String renderedMessage;
+
+            try {
+                renderedMessage = String.format(message, args);
+            }
+            catch (RuntimeException e) {
+                log4j.log(
+                    level.toInt() < Level.WARN_INT ? Level.WARN : level,
+                    String.format("Bogus format string: %s %s [%s] (%s)", level, message, safeToString(args), safeToString(e)),
+                    cause
+                );
+
+                return;
+            }
+
+            log4j.log(level, renderedMessage, cause);
         }
     }
 
@@ -332,7 +342,53 @@ public class Logger
     private void logDebugf(final Level level, final Throwable cause, final String message, final Object... args)
     {
         if (log4j.isEnabledFor(level)) {
-            logDebug(level, cause, String.format(message, args));
+            String renderedMessage;
+
+            try {
+                renderedMessage = String.format(message, args);
+            }
+            catch (RuntimeException e) {
+                logDebug(
+                    level.toInt() < Level.WARN_INT ? Level.WARN : level,
+                    cause,
+                    String.format("Bogus format string: %s %s [%s] (%s)", level, message, safeToString(args), safeToString(e))
+                );
+
+                return;
+            }
+
+            logDebug(level, cause, renderedMessage);
         }
+    }
+
+    private String safeToString(Object... args)
+    {
+        if (args == null) {
+            return "null";
+        }
+
+        StringBuilder result = new StringBuilder(16 * args.length);
+
+        for (Object arg : args) {
+            if (result.length() > 0) {
+                result.append(", ");
+            }
+
+            // guard against some object's toString() throwing an exception
+            try {
+                result.append(arg);
+            }
+            catch (RuntimeException e) {
+                try {
+                    result.append("toString():").append(e.toString());
+                }
+                catch (RuntimeException e2) {
+                    // guard against some exception's toString() throwing an exception
+                    result.append("???");
+                }
+            }
+        }
+
+        return result.toString();
     }
 }
