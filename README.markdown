@@ -1,9 +1,18 @@
-= Mogwee Logging, a simple wrapper around Log4J
+# Mogwee Logging, a simple wrapper around Log4J
 
 Mogwee Logging is just a bunch of methods to make using Log4J nicer.
 
 
-== Usage
+## Maven Info
+
+	<dependency>
+		<groupId>com.mogwee</groupId>
+		<artifactId>mogwee-logging</artifactId>
+		<version>1.0.0</version>
+	</dependency>
+
+
+## Usage
 
 To construct a logger, add a static member variable to your class:
 	private static final Logger LOG = Logger.getLogger();
